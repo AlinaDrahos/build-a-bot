@@ -4,6 +4,10 @@
     "module": "esnext",
     "baseUrl": "./",
     "moduleResolution": "node",
+    "checkJs": true,
+    "types": [
+      "webpack-env"
+    ],
     "ignoreDeprecations": "6.0",
     "paths": {
       "@/*": [
