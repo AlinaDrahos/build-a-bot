@@ -1,41 +1,65 @@
 <template>
-<div>
-  <div class="top-row">
-    <div class="top part">
-      <img :src="selectedRobot.head.imageUrl" alt="head" />
-      <button @click="selectPreviousHead()" class="prev-selector">&#9668;</button>
-      <button @click="selectNextHead()" class="next-selector">&#9658;</button>
+  <div class="content">
+    <button class="add-to-cart" @click="addToCart()">Add To Cart</button>
+    <div class="top-row">
+      <div class="top part">
+        <div class="robot-name">
+          {{ selectedRobot.head.title }}
+          <span v-if="selectedRobot.head.onSale" class="sale">Sale!</span>
+        </div>
+        <img :src="selectedRobot.head.imageUrl" alt="head" />
+        <button @click="selectPreviousHead()" class="prev-selector">&#9668;</button>
+        <button @click="selectNextHead()" class="next-selector">&#9658;</button>
+      </div>
+    </div>
+    <div class="middle-row">
+      <div class="left part">
+        <img :src="selectedRobot.leftArm.imageUrl" alt="left arm" />
+        <button @click="selectPreviousLeftArm()" class="prev-selector">&#9650;</button>
+        <button @click="selectNextLeftArm()" class="next-selector">&#9660;</button>
+      </div>
+      <div class="center part">
+        <img :src="selectedRobot.torso.imageUrl" alt="torso" />
+        <button @click="selectPreviousTorso()" class="prev-selector">&#9668;</button>
+        <button @click="selectNextTorso()" class="next-selector">&#9658;</button>
+      </div>
+      <div class="right part">
+        <img :src="selectedRobot.rightArm.imageUrl" alt="right arm" />
+        <button @click="selectPreviousRightArm" class="prev-selector">&#9650;</button>
+        <button @click="selectNextRightArm" class="next-selector">&#9660;</button>
+      </div>
+    </div>
+    <div class="bottom-row">
+      <div class="bottom part">
+        <img :src="selectedRobot.base.imageUrl" alt="base" />
+        <button @click="selectPreviousBaseIndex()" class="prev-selector">&#9668;</button>
+        <button @click="selectNextBaseIndex()" class="next-selector">&#9658;</button>
+      </div>
     </div>
   </div>
-  <div class="middle-row">
-    <div class="left part">
-      <img :src="selectedRobot.leftArm.imageUrl" alt="left arm" />
-      <button @click="selectPreviousLeftArm()" class="prev-selector">&#9650;</button>
-      <button @click="selectNextLeftArm()" class="next-selector">&#9660;</button>
-    </div>
-    <div class="center part">
-      <img :src="selectedRobot.torso.imageUrl" alt="torso" />
-      <button @click="selectPreviousTorso()" class="prev-selector">&#9668;</button>
-      <button @click="selectNextTorso()" class="next-selector">&#9658;</button>
-    </div>
-    <div class="right part">
-      <img :src="selectedRobot.rightArm.imageUrl" alt="right arm" />
-      <button @click="selectPreviousRightArm" class="prev-selector">&#9650;</button>
-      <button @click="selectNextRightArm" class="next-selector">&#9660;</button>
-    </div>
+  <div>
+    <hi>Cart</hi>
+    <table>
+      <thead>
+        <tr>
+          <th>Robot</th>
+          <th class="cost">Cost</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(robot,index) in cart" :key="index">
+          <td>{{ robot.head.title }} </td>
+          <td class="cost">{{ toCurrency(robot.cost) }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-  <div class="bottom-row">
-    <div class="bottom part">
-      <img :src="selectedRobot.base.imageUrl" alt="base" />
-      <button @click="selectPreviousBaseIndex()" class="prev-selector">&#9668;</button>
-      <button @click="selectNextBaseIndex()" class="next-selector">&#9658;</button>
-    </div>
-  </div>
-</div>
 </template>
 
 <script>
 import parts from '../data/parts';
+import { toCurrency } from '../shared/formatters';
+import createdHook from './created-hook-mixin';
 
 /**
  * @param {number} index
@@ -51,13 +75,34 @@ function getNextValidIndex(index, length) {
  * @param {number} length
  */
 function getPreviousValidIndex(index, length) {
-  const deprectedIndex = index - 1;
-  return deprectedIndex < 0 ? length - 1 : deprectedIndex;
+  const deprecatedIndex = index - 1;
+  return deprecatedIndex < 0 ? length - 1 : deprecatedIndex;
 }
+
+/**
+ * @typedef {object} RobotPart
+ * @property {number} id
+ * @property {string} description
+ * @property {string} title
+ * @property {*} imageUrl
+ * @property {string} type
+ * @property {number} cost
+ * @property {unknown} [onSale]
+ */
+
+/**
+ * @typedef {object} CartRobot
+ * @property {RobotPart} head
+ * @property {RobotPart} leftArm
+ * @property {RobotPart} torso
+ * @property {RobotPart} rightArm
+ * @property {RobotPart} base
+ * @property {number} cost
+ */
 
 export default {
   name: 'RobotBuilder',
-
+  mixins: [createdHook],
   data() {
     return {
       selectedHeadIndex: 0,
@@ -66,6 +111,8 @@ export default {
       selectedRightArmIndex: 0,
       selectedBaseIndex: 0,
       availableParts: parts,
+      /** @type {CartRobot[]} */
+      cart: [],
     };
   },
   computed: {
@@ -80,6 +127,23 @@ export default {
     },
   },
   methods: {
+    addToCart() {
+      const robot = this.selectedRobot;
+      const cost = robot.head.cost +
+      robot.leftArm.cost +
+      robot.torso.cost +
+      robot.rightArm.cost +
+      robot.base.cost;
+      this.cart.push({ ...robot, cost });
+    },
+    //     /**
+    //  * @param {number} amount
+    //     */
+    //     toMyCurrency(amount) {
+    //       return ToCurrency(amount);
+    //     },
+    toCurrency,
+
     selectNextHead() {
       this.selectedHeadIndex = getNextValidIndex(
         this.selectedHeadIndex,
@@ -252,4 +316,38 @@ export default {
 .right .next-selector {
   right: -3px;
 }
+
+.robot-name {
+  position: absolute;
+  top: -25px;
+  text-align: center;
+  width: 100%;
+}
+
+.sale {
+  color: red;
+}
+
+.content{
+  position: relative;
+}
+
+.add-to-cart{
+  position: absolute;
+  right: 30px;
+  width:220px;
+  padding: 10px 20px;
+  font-size: 16px;
+}
+td,
+th{
+  text-align: left;
+  border: 1px solid #aaa;
+  padding: 5px;
+}
+
+.cost{
+  text-align: right;
+}
+
 </style>
