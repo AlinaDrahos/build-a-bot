@@ -38,7 +38,7 @@
     </div>
   </div>
   <div>
-    <hi>Cart</hi>
+    <h1>Cart</h1>
     <table>
       <thead>
         <tr>
@@ -57,7 +57,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import parts from '../data/parts';
 import { toCurrency } from '../shared/formatters';
 
@@ -105,9 +105,11 @@ const selectedTorsoIndex = ref(0);
 const selectedRightArmIndex = ref(0);
 const selectedBaseIndex = ref(0);
 const availableParts = parts;
-/** @type {CartRobot[]} */
+
+/** @type {import('vue').Ref<CartRobot[]>} */
 const cart = ref([]);
 
+onMounted(() => console.log('OnMountedExecuted'));
 const selectedRobot = computed(() => ({
   head: availableParts.heads[selectedHeadIndex.value],
   leftArm: availableParts.arms[selectedLeftArmIndex.value],
