@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <input placeholder="Enter Search Term" @input="searchTerm = $event.target.value" />
+      <input placeholder="Enter Search Term" @input="searchTerm = $event.target?.value" />
     </div>
     <div class="filters">
       <div><button @click="applyFilters({ type: 'heads' })">Filter for Heads</button></div>
@@ -9,7 +9,7 @@
       <div><button @click="applyFilters({ type: 'torsos' })">Filter for Torsos</button></div>
       <div><button @click="applyFilters({ type: 'bases' })">Filter for Bases</button></div>
       <div><button @click="clearFilters()">Clear Filters</button></div>
-      <div>Filters: {{ filters }}</div>
+      <div>Filters: {{ filters[0]?.type }}</div>
     </div>
   </div>
   <div>
