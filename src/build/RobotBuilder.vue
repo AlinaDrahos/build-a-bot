@@ -2,7 +2,7 @@
   <div class="content">
     <button class="add-to-cart" @click="addToCart()">Add To Cart</button>
     <div class="top-row">
-      <div class="top part">
+      <div  class="top part">
         <div class="robot-name">
           {{ selectedRobot.head.title }}
           <span v-if="selectedRobot.head.onSale" class="sale">Sale!</span>
@@ -62,7 +62,7 @@ import parts from '../data/parts';
 import { toCurrency } from '../shared/formatters';
 
 /**
-     * @param {number} index
+ * @param {number} index
      * @param {number} length
      */
 function getNextValidIndex(index, length) {
@@ -80,7 +80,7 @@ function getPreviousValidIndex(index, length) {
 }
 
 /**
-     * @typedef {object} RobotPart
+ * @typedef {object} RobotPart
      * @property {number} id
      * @property {string} description
      * @property {string} title
@@ -110,6 +110,7 @@ const availableParts = parts;
 const cart = ref([]);
 
 onMounted(() => console.log('OnMountedExecuted'));
+
 const selectedRobot = computed(() => ({
   head: availableParts.heads[selectedHeadIndex.value],
   leftArm: availableParts.arms[selectedLeftArmIndex.value],
@@ -117,6 +118,12 @@ const selectedRobot = computed(() => ({
   rightArm: availableParts.arms[selectedRightArmIndex.value],
   base: availableParts.bases[selectedBaseIndex.value],
 }));
+
+// const headBorderStyle = computed(() => ({
+//   border: selectedRobot.value.head.onSale ? '3px solid red' : '3px solid #aaa',
+// }));
+
+const headBorderColor = computed(() => (selectedRobot.value.head.onSale ? 'red' : '#aaa'));
 
 const addToCart = () => {
   const robot = selectedRobot.value;
@@ -199,7 +206,7 @@ const selectPreviousBaseIndex = () => {
 
 </script>
 
-<style>
+<style lang="scss" scoped>
 .part {
   position: relative;
   width: 200px;
@@ -207,8 +214,16 @@ const selectPreviousBaseIndex = () => {
   border: 3px solid #aaa;
 }
 
-.part img {
-  width: 200px;
+.top.part {
+  border: 3px solid v-bind(headBorderColor);
+}
+
+.part {
+  img {
+    width: 200px;
+
+  }
+
 }
 
 .top-row {

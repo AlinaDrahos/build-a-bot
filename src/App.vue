@@ -11,35 +11,41 @@
   </header>
   <main>
     <!-- <HomePage msg="Welcome to Your Vue.js App"/> -->
-    <ProductSearch/>
+      <RobotBuilder/>
   </main>
 
 </template>
 
 <script>
 // import HomePage from './home/HomePage.vue';
-// import RobotBuilder from './build/RobotBuilder.vue';
-import ProductSearch from './search/ProductSearch.vue';
+import RobotBuilder from './build/RobotBuilder.vue';
+// import ProductSearch from './search/ProductSearch.vue';
 
 export default {
   name: 'App',
   components: {
     // HomePage,
-    // RobotBuilder,
-    ProductSearch,
+    RobotBuilder,
+    // ProductSearch,
   },
 };
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-}
-body{
-  background:linear-gradient(to bottom, #555,#999);
-  background-attachment: fixed;
-}
+  #app {
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+  }
+  body{
+    background:linear-gradient(to bottom, #555,#999);
+    background-attachment: fixed;
+  }
+</style>
 
+<style scoped>
+/* .robot-builder/deep/.add-to-cart{
+  color:red;
+  border: 2px solid #0000ff;
+} */
 main{
   margin : 0 auto;
   padding: 30px;
